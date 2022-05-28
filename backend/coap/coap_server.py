@@ -6,6 +6,8 @@ import asyncio
 import aiocoap.resource as resource
 import aiocoap
 
+from coap.resources.readings_resource import ReadingResource
+
 
 class BlockResource(resource.Resource):
     """Example resource which supports the GET and PUT methods. It sends large
@@ -121,6 +123,7 @@ async def main():
     root.add_resource(["other", "block"], BlockResource())
     root.add_resource(["other", "separate"], SeparateLargeResource())
     root.add_resource(["whoami"], WhoAmI())
+    root.add_resource(["readings"], ReadingResource())
 
     await aiocoap.Context.create_server_context(root)
 
