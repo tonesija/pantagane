@@ -10,7 +10,7 @@ router = APIRouter(prefix="/readings", tags=["readings"])
 
 
 @router.get("/{device_id}", response_model=List[ReadingOut])
-def list_readings(device_id: int, db: Session = Depends(get_db)):
+def list_readings(device_id: str, db: Session = Depends(get_db)):
     """Gets all readings that belong to a device.
 
     Args:

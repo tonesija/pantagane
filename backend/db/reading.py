@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from database import Base
 from sqlalchemy.sql import func
 
+
 class Reading(Base):
 
     __tablename__ = "readings"
@@ -11,5 +12,5 @@ class Reading(Base):
     ammount = Column(Integer)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    device_id = Column(Integer, ForeignKey("devices.id"))
+    device_id = Column(Integer, ForeignKey("devices.device_id"))
     device = relationship("Device", back_populates="readings")

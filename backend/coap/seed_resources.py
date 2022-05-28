@@ -1,11 +1,8 @@
-import logging
+import json
 import asyncio
 
 from aiocoap import Context, Message
 from aiocoap.numbers.codes import Code
-
-
-logging.basicConfig(level=logging.INFO)
 
 
 async def main():
@@ -13,10 +10,12 @@ async def main():
 
     context = await Context.create_client_context()
 
-    await asyncio.sleep(2)
-
-    payload = {"device_id": "device_id", "ammount": 7}
-    request = Message(code=Code.POST, payload=payload, uri="coap://localhost/readings")
+    payload = {"device_id": "string", "ammount": 9}
+    request = Message(
+        code=Code.POST,
+        payload=bytes(json.dumps(payload), encoding="utf-8"),
+        uri="coap://localhost/readings",
+    )
 
     response = await context.request(request).response
 
