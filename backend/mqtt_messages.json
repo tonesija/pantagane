@@ -9,14 +9,14 @@
 
 // device/+/actuator
 {
-  "message_type": "set_counter",
+  "type": "set_counter",
   "value": 10
 }
 {
-  "message_type": "max_people_in_room",
+  "type": "max_people_in_room",
   "value": 10
 }
 {
-  "message_type": "max_interval",
+  "type": "max_interval",
   "value": 10
 }

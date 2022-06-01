@@ -7,6 +7,7 @@ from constants import (
     PLATFORM_MQTT_PORT,
     PUB_TOPIC,
     SUB_TOPIC,
+    MessageTypesEnum,
 )
 from settings import Settings
 
@@ -59,3 +60,42 @@ def mqtt_subscribe_sensor(customCallback: Callable):
             print(f"Failed to subscribe to a topic: {SUB_TOPIC}.")
     except:
         print("Publish exception.")
+
+
+def mqtt_publish_actuate_max_capacity(new_value: int, device: str):
+    """Published a actuation MQTT message of type 'max_people_in_room'.
+
+    Args:
+        new_value (int): new max capacity.
+        device (str): name of the device, used in a topic.
+    """
+
+    payload = {"type": MessageTypesEnum.MAX_PEOPLE_IN_ROOM, "value": new_value}
+
+    mqtt_publish_actuate(payload, device)
+
+
+def mqtt_publish_actuate_max_interval(new_value: int, device: str):
+    """Published a actuation MQTT message of type 'max_interval'.
+
+    Args:
+        new_value (int): new max interval.
+        device (str): name of the device, used in a topic.
+    """
+
+    payload = {"type": MessageTypesEnum.MAX_INTERVAL, "value": new_value}
+
+    mqtt_publish_actuate(payload, device)
+
+
+def mqtt_publish_actuate_set_counter(new_value: int, device: str):
+    """Published a actuation MQTT message of type 'set_counter'.
+
+    Args:
+        new_value (int): new counter value.
+        device (str): name of the device, used in a topic.
+    """
+
+    payload = {"type": MessageTypesEnum.SET_COUNTER, "value": new_value}
+
+    mqtt_publish_actuate(payload, device)
