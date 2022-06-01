@@ -43,7 +43,7 @@ def mqtt_publish_actuate(message: dict, device: str):
         print("Publish exception.")
 
 
-def mqtt_subscrube_sensor(callback: Callable):
+def mqtt_subscrube_sensor(customCallback: Callable):
     """Subscribes mqtt client to all sensor topics.
 
     Args:
@@ -51,7 +51,7 @@ def mqtt_subscrube_sensor(callback: Callable):
     """
 
     try:
-        success: bool = mqtt_client.subscribe(SUB_TOPIC, 1, callback)
+        success: bool = mqtt_client.subscribe(SUB_TOPIC, 1, customCallback)
 
         if success:
             print(f"Subscription to a topic: {SUB_TOPIC} was successful.")
