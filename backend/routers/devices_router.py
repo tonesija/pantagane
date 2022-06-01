@@ -55,6 +55,10 @@ def register_device(username: str, device: DeviceIn, db: Session = Depends(get_d
         device_db = Device(**device.dict())
         user.devices.append(device_db)
         db.commit()
+
+        mqtt_publish_actuate_max_capacity(device.max_capacity, device_db.device_id)
+        mqtt_publish_actuate_max_interval(device.max_interval, device_db.device_id)
+        mqtt_publish_actuate_set_counter(0, device_db.device_id)
         return device_db
     except IntegrityError:
         raise HTTPException(
