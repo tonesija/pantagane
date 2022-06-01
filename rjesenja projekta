@@ -1,0 +1,27 @@
+- aws iot core
+    - mqtt broker
+    - things su mu uredaji + 1 web app
+    i/ili:
+    - sprema mqtt poruke u dynamoDB
+    
+http/backend/web app server
+    - ima svoju bazu
+    - mqtt: sub: dohvaca ocitanja od senzora i sprema ih u baz
+    - mqtt: pub: aktuacija senzora
+    ili:
+    - nema svoju bazu
+    - koristi boto3 da cita dynamoDB na iot coru
+    - https za pub mqtta
+    - ovo je onda ujedno i frontend
+
+senzori
+    - mqtt: sub: za aktuaciju
+    - mqtt: pub: readings
+
+frontend (dio web appa)
+    - http do backenda gleda bazu
+    - request za aktuacije
+
+
+https://boto3.amazonaws.com/v1/documentation/api/latest/guide/dynamodb.html     <- dynamoDB access
+za iot thing backenda/web appa                                                  <- dodaj thing / (LEARN) botun
