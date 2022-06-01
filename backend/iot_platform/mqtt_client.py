@@ -43,7 +43,7 @@ def mqtt_publish_actuate(message: dict, device: str):
         print("Publish exception.")
 
 
-def mqtt_subscrube_sensor(customCallback: Callable):
+def mqtt_subscribe_sensor(customCallback: Callable):
     """Subscribes mqtt client to all sensor topics.
 
     Args:
