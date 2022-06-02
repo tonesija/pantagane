@@ -1,10 +1,13 @@
 import React from "react";
-
 import { Form, Button, Input, Typography } from "antd";
 
+import { login } from "../../services/authService";
+
 function Login() {
-  const onFinish = (formData) => {
-    console.log(formData);
+  const onFinish = async (formData) => {
+    const response = await login(formData);
+
+    console.log(response);
   };
 
   return (
