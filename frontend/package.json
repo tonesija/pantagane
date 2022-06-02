@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mv build/* ../backend/public/",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -21,7 +21,9 @@
       "react-app",
       "react-app/jest"
     ],
-    "ignorePatterns": ["./node_modules/*"]
+    "ignorePatterns": [
+      "./node_modules/*"
+    ]
   },
   "browserslist": {
     "production": [

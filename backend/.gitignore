@@ -152,10 +152,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# AWS IOT CORE PLATFORM KEYS
-web_server.cert.pem
-web_server.private.key
-web_server.public.key
-root-CA.crt
 
+# sql lite dev db
 sql_app.db
+
+# client static files (frontend)
+public/*
