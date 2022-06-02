@@ -157,3 +157,5 @@ web_server.cert.pem
 web_server.private.key
 web_server.public.key
 root-CA.crt
+
+sql_app.db
