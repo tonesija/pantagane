@@ -1,5 +1,7 @@
 from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from database import get_db
@@ -67,4 +69,18 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    #return {"access_token": access_token, "token_type": "bearer"}
+    token = jsonable_encoder(access_token)
+    content = {"message": "You've successfully logged in. Welcome back!"}
+    response = JSONResponse(content=content)
+    response.set_cookie(
+        "Authorization",
+        value=f"Bearer {token}",
+        httponly=True,
+        max_age=1800,
+        expires=1800,
+        samesite="Lax",
+        secure=False,
+    )   
+
+    return response
