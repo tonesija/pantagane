@@ -59,7 +59,7 @@ def mqtt_subscribe_sensor(customCallback: Callable):
         else:
             print(f"Failed to subscribe to a topic: {SUB_TOPIC}.")
     except:
-        print("Publish exception.")
+        print("Subscribe exception.")
 
 
 def mqtt_publish_actuate_max_capacity(new_value: int, device: str):
