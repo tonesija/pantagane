@@ -7,9 +7,12 @@ from settings import Settings
 
 SQLALCHEMY_DATABASE_URL = Settings().get_database_url()
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+if "sqlite" in SQLALCHEMY_DATABASE_URL:
+    connect_args = {"check_same_thread": False}
+else:
+    connect_args = None
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
