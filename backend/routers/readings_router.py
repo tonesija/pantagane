@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from database import get_db
 from db.reading import Reading
 from models.readings import ReadingOut
+from db.user import User
+from auth.auth_middleware import get_current_user
 
 
 router = APIRouter(prefix="/readings", tags=["readings"])
@@ -22,6 +24,7 @@ def list_readings(
     page: int = 0,
     page_size: int = 50,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """Gets all readings that belong to a device.
 

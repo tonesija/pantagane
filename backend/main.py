@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from database import Base, engine
 from iot_platform.mqtt_client import mqtt_subscribe_sensor
 from routers import readings_router, devices_router, users_router
+from settings import Settings
 
 from iot_platform.iot_platform_handlers import base_handler
 
@@ -25,7 +26,7 @@ def init():
 
 
 # Serve SPA
-app.mount("/", StaticFiles(directory="public", html=True))
+#app.mount("/", StaticFiles(directory="public", html=True))
 
 # if __name__ == "__main__":
 #     uvicorn.run(

@@ -16,7 +16,7 @@ class Settings(BaseSettings):
 
     # JWT CONFIG
     secret_key: str
-
+    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
