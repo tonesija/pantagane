@@ -18,9 +18,7 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          cd backend
-          mkdir public
-          cd ..
+          mkdir backend/public
           cd frontend
           npm install
           npm run build
