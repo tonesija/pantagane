@@ -100,11 +100,11 @@ def update_device(
 
     try:
         device_query = db.query(Device).filter(Device.device_id == device_id)
-        if device_query.one().user.username != current_user.username :
+        if device_query.one().user.username != current_user.username:
             raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Unauthorized to change device with device_id: {device_id}.",
-        ) 
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"Unauthorized to change device with device_id: {device_id}.",
+            )
 
         update_dict = device.dict(exclude_none=True, exclude_unset=True)
         if device.counter is not None:
@@ -115,11 +115,11 @@ def update_device(
         db.commit()
 
         # Send mqtt actuation messages about changes.
-        if device.max_capacity:
+        if device.max_capacity is not None:
             mqtt_publish_actuate_max_capacity(device.max_capacity, device_id)
-        if device.max_interval:
+        if device.max_interval is not None:
             mqtt_publish_actuate_max_interval(device.max_interval, device_id)
-        if device.counter:
+        if device.counter is not None:
             mqtt_publish_actuate_set_counter(device.counter, device_id)
 
     except NoResultFound:
