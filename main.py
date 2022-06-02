@@ -1,6 +1,4 @@
 from fastapi import FastAPI
-import uvicorn
-from settings import Settings
 
 from database import Base, engine
 from iot_platform.mqtt_client import mqtt_subscribe_sensor
