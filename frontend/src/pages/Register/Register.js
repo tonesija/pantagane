@@ -43,9 +43,7 @@ function Register() {
             {
               pattern: /^[A-Za-z][A-Za-z0-9]{5,23}$/,
               message:
-                "Username must consist of uppercase or lowercase \
-              letters, or numbers, must start with a letter and \
-              must be between 6 and 24 characters.",
+                "Username must consist of uppercase or lowercase letters, or numbers, must start with a letter and must be between 6 and 24 characters.",
             },
           ]}
         >
@@ -60,9 +58,7 @@ function Register() {
             {
               pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,24}$/,
               message:
-                "Password must contain a lowercase letter, \
-              an uppercase letter, a number, and must be between 8 \
-              and 24 characters.",
+                "Password must contain a lowercase letter, an uppercase letter, a number, and must be between 8 and 24 characters.",
             },
           ]}
         >
