@@ -13,6 +13,7 @@ from passlib.context import CryptContext
 from settings import Settings
 from jose import JWTError, jwt
 from pydantic import BaseModel
+from sqlalchemy.exc import NoResultFound
 
 
 SECRET_KEY = Settings().secret_key
@@ -64,12 +65,19 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 def authenticate_user(username: str, password: str,db):
-    user = db.query(User).filter(User.username == username).one()
-    if not user:
-        return False
-    if not verify_password(password, user.password):
-        return False
-    return user
+    try:
+        user = db.query(User).filter(User.username == username).one()
+
+        if not verify_password(password, user.password):
+            return False
+        return user
+
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
     to_encode = data.copy()
