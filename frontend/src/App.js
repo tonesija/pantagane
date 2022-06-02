@@ -6,7 +6,8 @@ import {
   Register,
   Home,
   History,
-  SetDeviceValues,
+  Settings,
+  Devices,
 } from "./pages";
 
 import "antd/dist/antd.min.css";
@@ -23,8 +24,9 @@ function App() {
               index
               element={<p>Please choose one of the options above</p>}
             />
+            <Route path="devices" element={<Devices />} />
             <Route path="history" element={<History />} />
-            <Route path="setdevicevalues" element={<SetDeviceValues />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

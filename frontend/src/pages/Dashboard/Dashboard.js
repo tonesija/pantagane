@@ -57,14 +57,16 @@ function Dashboard() {
         mode="horizontal"
         items={[
           {
+            label: <Link to="/dashboard/devices">Devices</Link>,
+            key: "dashboard-devices",
+          },
+          {
             label: <Link to="/dashboard/history">History</Link>,
             key: "dashboard-history",
           },
           {
-            label: (
-              <Link to="/dashboard/setdevicevalues">Set device values</Link>
-            ),
-            key: "dashboard-set-values",
+            label: <Link to="/dashboard/settings">Settings</Link>,
+            key: "dashboard-settings",
           },
         ]}
       />
