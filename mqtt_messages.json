@@ -1,0 +1,22 @@
+
+
+// <DEVICE_ID> is the thing name !!!
+// device/<DEVICE_ID>/sensor
+{
+  "value": 10
+}
+
+
+// device/+/actuator
+{
+  "type": "set_counter",
+  "value": 10
+}
+{
+  "type": "max_people_in_room",
+  "value": 10
+}
+{
+  "type": "max_interval",
+  "value": 10
+}
