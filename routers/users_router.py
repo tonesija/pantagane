@@ -80,8 +80,8 @@ def login_for_access_token(
         httponly=True,
         max_age=1800,
         expires=1800,
-        samesite="Lax",
-        secure=False,
+        samesite="None",
+        secure=True,
     )
 
     return response
