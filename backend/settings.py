@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     certificate_path: str
     private_key_path: str
 
+    #JWT CONFIG
+    secret_key: str
+
     class Config:
-        env_file = ".env"
+        env_file = ".env.dev"
         env_file_encoding = "utf-8"

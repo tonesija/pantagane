@@ -1,16 +1,21 @@
-from typing import List
+from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from database import get_db
 from db.device import Device
 from db.user import User
 from models.devices import DeviceIn, DeviceOut
 from sqlalchemy.exc import IntegrityError
+from jose import JWTError, jwt
+from pydantic import BaseModel
+from auth.auth_middleware import authenticate_user,create_access_token, get_password_hash,Token
 
 from models.users import UserIn, UserOut
 
-router = APIRouter(prefix="/users", tags=["users"])
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+router = APIRouter(prefix="/users", tags=["users"])
 
 @router.post("", response_model=UserOut)
 def create_user(user: UserIn, db: Session = Depends(get_db)):
@@ -28,6 +33,7 @@ def create_user(user: UserIn, db: Session = Depends(get_db)):
 
     try:
         user_db = User(**user.dict())
+        user_db.password = get_password_hash(user_db.password)
         db.add(user_db)
         db.commit()
         return user_db
@@ -35,3 +41,30 @@ def create_user(user: UserIn, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="User already exists."
         )
+
+@router.post("/login", response_model=Token)
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    """Authentificates a user.
+
+    Args:
+        form_data: user credentials
+
+    Raises:
+        HTTPException: 401 if the credentials are wrong
+
+    Returns:
+    
+    """
+
+    user = authenticate_user(form_data.username, form_data.password,db)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}

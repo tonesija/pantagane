@@ -11,7 +11,8 @@ class UserBase(BaseModel):
 
 
 class UserIn(UserBase):
-    pass
+    password: str
+
 
 
 class UserOut(UserBase):

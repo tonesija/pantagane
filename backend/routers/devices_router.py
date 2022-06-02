@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from db.device import Device
 from db.user import User
+from auth.auth_middleware import get_current_user
 from iot_platform.mqtt_client import (
     mqtt_publish_actuate_max_capacity,
     mqtt_publish_actuate_max_interval,
@@ -16,7 +17,7 @@ router = APIRouter(prefix="/devices", tags=["devices"])
 
 
 @router.get("/{username}", response_model=List[DeviceOut])
-def list_devices(username: str, db: Session = Depends(get_db)):
+def list_devices(username: str, db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
     """Gets all devices that belong to a user.
 
     Args:
@@ -36,7 +37,7 @@ def list_devices(username: str, db: Session = Depends(get_db)):
 
 
 @router.post("/{username}", response_model=DeviceOut)
-def register_device(username: str, device: DeviceIn, db: Session = Depends(get_db)):
+def register_device(username: str, device: DeviceIn, db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
     """Registers and creates a devices belonging to a user.
 
     Args:
@@ -71,7 +72,7 @@ def register_device(username: str, device: DeviceIn, db: Session = Depends(get_d
 
 
 @router.put("/{device_id}", response_model=DeviceOut)
-def update_device(device_id: str, device: DeviceUpdate, db: Session = Depends(get_db)):
+def update_device(device_id: str, device: DeviceUpdate, db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
     """Updates a device.
 
     Args:
