@@ -1,11 +1,12 @@
 from datetime import datetime
 from typing import List
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query,HTTPException,status
 from sqlalchemy.orm import Session
 from database import get_db
 from db.reading import Reading
 from models.readings import ReadingOut
 from db.user import User
+from db.device import Device
 from auth.auth_middleware import get_current_user
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
