@@ -16,9 +16,9 @@ def base_handler(client, userdata, message):
     try:
         sensor_handler(message)
     except IntegrityError:
-        logger.error("TODO")
+        print("TODO")
     except KeyError:
-        logger.error("TODO")
+        print("TODO")
 
 
 def sensor_handler(message):
@@ -31,7 +31,7 @@ def sensor_handler(message):
     topic = message.topic
     payload = message.payload
 
-    logger.info(f"Received a new message: {payload} om topic: {topic}.")
+    print(f"Received a new message: {payload} on topic: {topic}.")
 
     device_id = topic.split("/")[1]
     value = json.loads(payload)["value"]
@@ -41,4 +41,4 @@ def sensor_handler(message):
         db.add(reading)
         db.commit()
 
-    logger.info(f"Reading for device: {device_id} has been saved.")
+    print(f"Reading for device: {device_id} has been saved.")
