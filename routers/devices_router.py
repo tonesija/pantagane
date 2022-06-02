@@ -16,13 +16,12 @@ from sqlalchemy.exc import IntegrityError, NoResultFound
 router = APIRouter(prefix="/devices", tags=["devices"])
 
 
-@router.get("/{username}", response_model=List[DeviceOut])
+@router.get("/", response_model=List[DeviceOut])
 def list_devices(
-    username: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Gets all devices that belong to a user.
+    """Gets all devices that belong to the current user.
 
     Args:
         username (str): username of the user.
@@ -32,7 +31,7 @@ def list_devices(
     """
 
     try:
-        user = db.query(User).filter(User.username == username).one()
+        user = db.query(User).filter(User.username == current_user.username).one()
         return db.query(Device).filter(Device.user_id == user.id).all()
     except NoResultFound:
         raise HTTPException(
@@ -40,9 +39,8 @@ def list_devices(
         )
 
 
-@router.post("/{username}", response_model=DeviceOut)
+@router.post("/", response_model=DeviceOut)
 def register_device(
-    username: str,
     device: DeviceIn,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -61,7 +59,7 @@ def register_device(
     """
 
     try:
-        user = db.query(User).filter(User.username == username).one()
+        user = db.query(User).filter(User.username == current_user.username).one()
         device_db = Device(**device.dict())
         user.devices.append(device_db)
         db.commit()
@@ -102,6 +100,12 @@ def update_device(
 
     try:
         device_query = db.query(Device).filter(Device.device_id == device_id)
+        if device_query.one().user.username != current_user.username :
+            raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Unauthorized to change device with device_id: {device_id}.",
+        ) 
+
         update_dict = device.dict(exclude_none=True, exclude_unset=True)
         if device.counter is not None:
             update_dict.pop("counter")

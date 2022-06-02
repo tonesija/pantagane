@@ -7,6 +7,7 @@ from db.reading import Reading
 from models.readings import ReadingOut
 from db.user import User
 from auth.auth_middleware import get_current_user
+from sqlalchemy.exc import IntegrityError, NoResultFound
 
 
 router = APIRouter(prefix="/readings", tags=["readings"])
@@ -35,6 +36,13 @@ def list_readings(
         (List[ReadingsOut])
     """
 
+    print(start_time)
+    device_query = db.query(Device).filter(Device.device_id == device_id)
+    if device_query.one().user.username != current_user.username :
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized to see readings from devices that belong to other users!",
+        ) 
     return (
         db.query(Reading)
         .filter(Reading.device_id == device_id)

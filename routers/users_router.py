@@ -63,20 +63,16 @@ def login_for_access_token(
         cookie with set auth token
     """
 
-    user = authenticate_user(form_data.username, form_data.password, db)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    user = authenticate_user(form_data.username, form_data.password,db)
+   
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     # return {"access_token": access_token, "token_type": "bearer"}
     token = jsonable_encoder(access_token)
-    content = {"message": "You've successfully logged in. Welcome back!"}
+    content = {"message": "You've successfully logged in. Welcome back!",
+                "username": user.username}
     response = JSONResponse(content=content)
     response.set_cookie(
         "Authorization",
