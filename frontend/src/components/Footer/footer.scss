@@ -1,0 +1,15 @@
+@import "../../styles/app.scss";
+
+.footer {
+  margin: 0;
+  background-color: $primary-color;
+  padding: 16px;
+  // position: fixed;
+  flex-shrink: 0;
+
+  h5,
+  p,
+  div {
+    color: $font-color-light !important;
+  }
+}

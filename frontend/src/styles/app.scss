@@ -1,0 +1,8 @@
+// Glavni stylesheet, sve ostale scss-ove iz ovog
+// foldera treba importati, a ovaj scss se importa
+// u sve ostale scss-ove u components i pages
+// folderima.
+
+@import "colors.scss";
+
+// Ovdje idu neki globalni styleovi

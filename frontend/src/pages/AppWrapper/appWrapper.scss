@@ -1,0 +1,11 @@
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main {
+  padding: 30px;
+  flex-shrink: 0;
+  flex: 1 0 auto;
+}
