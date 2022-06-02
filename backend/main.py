@@ -26,4 +26,4 @@ def init():
 
 
 # Serve SPA
-app.mount("/", StaticFiles(directory="public", html=True))
+#app.mount("/", StaticFiles(directory="public", html=True))
