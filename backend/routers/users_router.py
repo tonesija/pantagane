@@ -55,7 +55,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
         HTTPException: 401 if the credentials are wrong
 
     Returns:
-    
+        cookie with set auth token
     """
 
     user = authenticate_user(form_data.username, form_data.password,db)
