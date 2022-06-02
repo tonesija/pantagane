@@ -19,12 +19,12 @@ def list_readings(
         default=datetime(1900, 1, 1), example="2022-06-01T21:59:04.461Z"
     ),
     end_time: datetime = Query(
-        default=datetime.now(), example="2022-06-01T21:59:04.461Z"
+        default=datetime(2100, 1, 1), example="2022-06-01T21:59:04.461Z"
     ),
     page: int = 0,
     page_size: int = 50,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """Gets all readings that belong to a device.
 
