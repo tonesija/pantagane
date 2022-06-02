@@ -17,7 +17,11 @@ router = APIRouter(prefix="/devices", tags=["devices"])
 
 
 @router.get("/{username}", response_model=List[DeviceOut])
-def list_devices(username: str, db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
+def list_devices(
+    username: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Gets all devices that belong to a user.
 
     Args:
@@ -37,7 +41,12 @@ def list_devices(username: str, db: Session = Depends(get_db),current_user: User
 
 
 @router.post("/{username}", response_model=DeviceOut)
-def register_device(username: str, device: DeviceIn, db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
+def register_device(
+    username: str,
+    device: DeviceIn,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Registers and creates a devices belonging to a user.
 
     Args:
@@ -72,7 +81,12 @@ def register_device(username: str, device: DeviceIn, db: Session = Depends(get_d
 
 
 @router.put("/{device_id}", response_model=DeviceOut)
-def update_device(device_id: str, device: DeviceUpdate, db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
+def update_device(
+    device_id: str,
+    device: DeviceUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Updates a device.
 
     Args:
@@ -88,7 +102,7 @@ def update_device(device_id: str, device: DeviceUpdate, db: Session = Depends(ge
 
     try:
         device_query = db.query(Device).filter(Device.device_id == device_id)
-        update_dict = device.dict(exclude_none=True)
+        update_dict = device.dict(exclude_none=True, exclude_unset=True)
         if device.counter:
             update_dict.pop("counter")
         device_query.update(update_dict)

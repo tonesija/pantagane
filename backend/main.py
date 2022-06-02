@@ -27,11 +27,3 @@ def init():
 
 # Serve SPA
 app.mount("/", StaticFiles(directory="public", html=True))
-
-# if __name__ == "__main__":
-#     uvicorn.run(
-#         "main:app",
-#         host=Settings().http_url,
-#         reload=Settings().debug_mode,
-#         port=Settings().port,
-#     )
