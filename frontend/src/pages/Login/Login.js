@@ -1,10 +1,19 @@
 import React from "react";
-
 import { Form, Button, Input, Typography } from "antd";
 
+import { login } from "../../services/authService";
+import { useNavigate } from "react-router-dom";
+
 function Login() {
-  const onFinish = (formData) => {
-    console.log(formData);
+  const navigate = useNavigate();
+
+  const onFinish = async (formData) => {
+    const response = await login(formData);
+
+    // provjeri response i ovisno o njemu navigiraj
+    if (response?.status === 200) {
+      navigate("/dashboard");
+    }
   };
 
   return (
