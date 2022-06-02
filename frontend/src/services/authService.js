@@ -5,20 +5,28 @@ const LOGIN_URL = "/users/login";
 
 export async function login(userData) {
   try {
-    const response = await axios.post(LOGIN_URL, JSON.stringify(userData));
+    const params = new URLSearchParams();
+    params.append("username", userData.username);
+    params.append("password", userData.password);
+    const response = await axios.post(LOGIN_URL, params, {
+      withCredentials: true,
+    });
     return response;
   } catch (err) {
     if (!err?.response) {
       return {
+        ...err,
         message: "No response.",
       };
-    } else if (err.response?.status === 400) {
+    } else if (err.response?.status === 401) {
       return {
+        ...err,
         message: "Wrong username or password.",
       };
     } else {
       return {
-        message: "Registration failed.",
+        ...err,
+        message: "Login failed.",
       };
     }
   }
@@ -30,7 +38,7 @@ export async function login(userData) {
 
 export async function register(userData) {
   try {
-    const response = await axios.post(REGISTER_URL, JSON.stringify(userData));
+    const response = await axios.post(REGISTER_URL, userData);
     return response;
   } catch (err) {
     if (!err?.response) {

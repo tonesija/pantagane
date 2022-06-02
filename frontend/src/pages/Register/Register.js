@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Typography, Button, Input } from "antd";
 
 import { register } from "../../services/authService";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
+
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const onFinish = async (formData) => {
     const userData = {
       username: formData.username,
@@ -11,10 +16,12 @@ function Register() {
     };
 
     const response = await register(userData);
-    console.log(response);
 
-    // TODO
-    // ako je uspjesno, redirektaj na login
+    if (response?.status === 200) {
+      navigate("/login");
+    } else {
+      setErrorMessage(response?.message);
+    }
   };
 
   return (
@@ -87,6 +94,8 @@ function Register() {
           </Button>
         </Form.Item>
       </Form>
+
+      <Typography.Text style={{ color: "red" }}>{errorMessage}</Typography.Text>
     </div>
   );
 }
