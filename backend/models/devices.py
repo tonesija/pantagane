@@ -21,6 +21,13 @@ class DeviceIn(DeviceBase):
 
 class DeviceOut(DeviceBase):
     id: int
+    counter: int
+
+    @classmethod
+    def from_orm(cls, device: Device, counter):
+        to_return = cls(**device.__dict__)
+        to_return.counter = counter
+        return to_return
 
 
 class DeviceUpdate(BaseModel):
