@@ -34,7 +34,6 @@ def list_readings(
     Returns:
         (List[ReadingsOut])
     """
-    print(start_time)
 
     return (
         db.query(Reading)
@@ -42,5 +41,6 @@ def list_readings(
         .filter(Reading.created_at.between(start_time, end_time))
         .limit(page_size)
         .offset(page_size * page)
+        .order_by(Reading.created_at.desc())
         .all()
     )
