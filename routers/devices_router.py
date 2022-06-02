@@ -32,7 +32,15 @@ def list_devices(
 
     try:
         user = db.query(User).filter(User.username == current_user.username).one()
-        return db.query(Device).filter(Device.user_id == user.id).all()
+        devices = db.query(Device).filter(Device.user_id == user.id).all()
+        devices_counter = [reading.ammount for reading in devices.readings]
+
+        devices_return_model = []
+        for i in range(len(devices)):
+            device_return_model = DeviceOut(devices[i], devices_counter[i])
+            devices_return_model.append(device_return_model)
+
+        return devices_return_model
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist."
