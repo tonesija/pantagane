@@ -20,3 +20,6 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+
+    def get_database_url(self):
+        return self.database_url.replace("postgres://", "postgresql://")
