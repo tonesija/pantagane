@@ -103,7 +103,7 @@ def update_device(
     try:
         device_query = db.query(Device).filter(Device.device_id == device_id)
         update_dict = device.dict(exclude_none=True, exclude_unset=True)
-        if device.counter:
+        if device.counter is not None:
             update_dict.pop("counter")
         device_query.update(update_dict)
         device_model = device_query.one()
