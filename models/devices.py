@@ -25,8 +25,7 @@ class DeviceOut(DeviceBase):
 
     @classmethod
     def from_orm(cls, device: Device, counter):
-        to_return = cls(**device.__dict__)
-        to_return.counter = counter
+        to_return = cls(**device.__dict__, counter=counter)
         return to_return
 
 
