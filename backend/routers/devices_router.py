@@ -1,6 +1,8 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import and_
+from sqlalchemy.orm import Session
+from db.reading import Reading
 from database import get_db
 from db.device import Device
 from db.user import User
@@ -10,13 +12,13 @@ from iot_platform.mqtt_client import (
     mqtt_publish_actuate_max_interval,
     mqtt_publish_actuate_set_counter,
 )
-from models.devices import DeviceIn, DeviceOut, DeviceOutWithCounter, DeviceUpdate
+from models.devices import DeviceIn, DeviceOut, DeviceUpdate
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 router = APIRouter(prefix="/devices", tags=["devices"])
 
 
-@router.get("/", response_model=List[DeviceOutWithCounter])
+@router.get("/", response_model=List[DeviceOut])
 def list_devices(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -30,12 +32,7 @@ def list_devices(
         (List[DeviceOutWithCounter])
     """
 
-    devices = (
-        db.query(Device)
-        .filter(Device.user_id == current_user.id)
-        .options(joinedload(Device.readings))
-        .all()
-    )
+    devices = db.query(Device).filter(Device.user_id == current_user.id).all()
 
     return devices
 

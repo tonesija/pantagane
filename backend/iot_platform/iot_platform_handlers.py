@@ -1,6 +1,7 @@
 import json
 import logging
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound
+from db.device import Device
 from database import get_session
 from db.reading import Reading
 
@@ -16,9 +17,11 @@ def base_handler(client, userdata, message):
     try:
         sensor_handler(message)
     except IntegrityError:
-        logger.error(f"Invalid mqtt payload: {message}")
+        logger.error(f"Invalid mqtt payload: {message}.")
     except KeyError:
-        logger.error(f"Invalid mqtt payload: {message}")
+        logger.error(f"Invalid mqtt payload: {message}.")
+    except NoResultFound:
+        logger.error(f"Device from not found from payload: {message}.")
 
 
 def sensor_handler(message):
@@ -39,6 +42,10 @@ def sensor_handler(message):
     with get_session() as db:
         reading = Reading(ammount=value, device_id=device_id)
         db.add(reading)
+
+        device = db.query(Device).one()
+        device.counter = value
+
         db.commit()
 
     logger.info(f"Reading for device: {device_id} has been saved.")

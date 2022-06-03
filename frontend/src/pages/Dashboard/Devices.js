@@ -18,16 +18,15 @@ function Devices() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("poceto");
     getDevices().then((data) => {
       setDevices(data);
-      console.log("gotovo");
     });
-    // setInterval(() => {
-    //   getDevices().then((data) => {
-    //     setDevices(data);
-    //   });
-    // }, REFRESH_TIMER);
+
+    setInterval(() => {
+      getDevices().then((data) => {
+        setDevices(data);
+      });
+    }, REFRESH_TIMER);
   }, []);
 
   return (
@@ -80,7 +79,9 @@ function Devices() {
                     type="link"
                     icon={<EditOutlined />}
                     onClick={() => {
-                      navigate("/dashboard/settings");
+                      navigate(
+                        "/dashboard/settings?device_id=" + device.device_id
+                      );
                     }}
                   />
                 </Tooltip>
@@ -91,7 +92,9 @@ function Devices() {
                     type="primary"
                     icon={<SelectOutlined />}
                     onClick={() => {
-                      navigate("/dashboard/history");
+                      navigate(
+                        "/dashboard/history?device_id=" + device.device_id
+                      );
                     }}
                   />
                 </Tooltip>

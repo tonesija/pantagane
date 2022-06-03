@@ -8,29 +8,18 @@ class DeviceBase(BaseModel):
     max_capacity: int
     max_interval: int
     desc: str
+    counter: int
 
     class Config:
         orm_mode = True
 
 
 class DeviceIn(DeviceBase):
-    pass
+    counter: Optional[int]
 
 
 class DeviceOut(DeviceBase):
     id: int
-
-
-class DeviceOutWithCounter(DeviceOut):
-    counter: int
-
-    @classmethod
-    def from_orm(cls, device: Device):
-        to_return = cls(
-            **device.__dict__,
-            counter=device.readings[-1].ammount if len(device.readings) > 0 else 0
-        )
-        return to_return
 
 
 class DeviceUpdate(BaseModel):

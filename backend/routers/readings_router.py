@@ -8,7 +8,7 @@ from models.readings import ReadingOut
 from db.user import User
 from db.device import Device
 from auth.auth_middleware import get_current_user
-from sqlalchemy.exc import IntegrityError, NoResultFound
+from sqlalchemy.exc import NoResultFound
 
 
 router = APIRouter(prefix="/readings", tags=["readings"])
