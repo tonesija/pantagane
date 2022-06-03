@@ -22,11 +22,15 @@ function Devices() {
       setDevices(data);
     });
 
-    setInterval(() => {
+    const getDeviceInterval = setInterval(() => {
+      console.log("eloo");
       getDevices().then((data) => {
         setDevices(data);
       });
     }, REFRESH_TIMER);
+
+    // doesnt work ?
+    return () => clearInterval(getDeviceInterval);
   }, []);
 
   return (
