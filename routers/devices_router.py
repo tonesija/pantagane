@@ -31,6 +31,7 @@ def list_devices(
     """
 
     try:
+        # TODO: optimize for the love of god
         user = db.query(User).filter(User.username == current_user.username).one()
         devices = db.query(Device).filter(Device.user_id == user.id).all()
         devices_counter = [
