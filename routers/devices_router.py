@@ -33,8 +33,10 @@ def list_devices(
     try:
         user = db.query(User).filter(User.username == current_user.username).one()
         devices = db.query(Device).filter(Device.user_id == user.id).all()
-        devices_counter = [device.readings[-1].ammount for device in devices]
-        print(devices_counter)
+        devices_counter = [
+            device.readings[-1].ammount if len(device.readings) > 0 else 0
+            for device in devices
+        ]
 
         devices_return_model = []
         for i in range(len(devices)):
