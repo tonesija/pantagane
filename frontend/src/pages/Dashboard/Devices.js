@@ -23,6 +23,7 @@ function Devices() {
       {devices.map((device) => (
         <Col span={6}>
           <Card
+            style={{ marginTop: "1em" }}
             title={
               <Row justify="space-between">
                 <Col>{device.device_id}</Col>
