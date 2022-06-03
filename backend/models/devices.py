@@ -1,8 +1,6 @@
-from typing import List, Optional
+from typing import Optional
 from pydantic import BaseModel
 from db.device import Device
-from db.reading import Reading
-from models.readings import ReadingOut
 
 
 class DeviceBase(BaseModel):
@@ -27,8 +25,11 @@ class DeviceOutWithCounter(DeviceOut):
     counter: int
 
     @classmethod
-    def from_orm(cls, device: Device, counter):
-        to_return = cls(**device.__dict__, counter=counter)
+    def from_orm(cls, device: Device):
+        to_return = cls(
+            **device.__dict__,
+            counter=device.readings[-1].ammount if len(device.readings) > 0 else 0
+        )
         return to_return
 
 

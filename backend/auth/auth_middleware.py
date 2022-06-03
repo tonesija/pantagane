@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta
 from typing import Union, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.security.utils import get_authorization_scheme_param
 from fastapi.security import OAuth2
 from sqlalchemy.orm import Session
 from database import get_db
-from db.device import Device
 from db.user import User
 from passlib.context import CryptContext
 from settings import Settings
@@ -19,12 +18,15 @@ from sqlalchemy.exc import NoResultFound
 SECRET_KEY = Settings().secret_key
 ALGORITHM = "HS256"
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     username: Union[str, None] = None
+
 
 class OAuth2PasswordBearerCookie(OAuth2):
     def __init__(
@@ -55,21 +57,25 @@ class OAuth2PasswordBearerCookie(OAuth2):
 
         return param
 
+
 oauth2_scheme = OAuth2PasswordBearerCookie(token_url="users/login")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
+
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-def authenticate_user(username: str, password: str,db):
+
+def authenticate_user(username: str, password: str, db):
     try:
         user = db.query(User).filter(User.username == username).one()
 
         if not verify_password(password, user.password):
-            return False
+            return None
         return user
 
     except NoResultFound:
@@ -78,6 +84,7 @@ def authenticate_user(username: str, password: str,db):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
 
 def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
     to_encode = data.copy()
@@ -88,8 +95,11 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-    
-def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(get_db)):
+
+
+def get_current_user(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

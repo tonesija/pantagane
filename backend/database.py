@@ -30,4 +30,6 @@ def get_db():
 
 @contextmanager
 def get_session():
+    """Db session for use out of FastAPI dependencies."""
+
     return get_db()
