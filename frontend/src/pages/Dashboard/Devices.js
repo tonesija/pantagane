@@ -7,17 +7,27 @@ import {
 } from "@ant-design/icons";
 
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { getDevices } from "../../services/dataService";
+
+const REFRESH_TIMER = 2500;
 
 function Devices() {
   const [devices, setDevices] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setInterval(() => {
-      getDevices().then((data) => {
-        setDevices(data);
-      });
-    }, 2500);
+    console.log("poceto");
+    getDevices().then((data) => {
+      setDevices(data);
+      console.log("gotovo");
+    });
+    // setInterval(() => {
+    //   getDevices().then((data) => {
+    //     setDevices(data);
+    //   });
+    // }, REFRESH_TIMER);
   }, []);
 
   return (
@@ -70,7 +80,7 @@ function Devices() {
                     type="link"
                     icon={<EditOutlined />}
                     onClick={() => {
-                      console.log(device);
+                      navigate("/dashboard/settings");
                     }}
                   />
                 </Tooltip>
@@ -81,7 +91,7 @@ function Devices() {
                     type="primary"
                     icon={<SelectOutlined />}
                     onClick={() => {
-                      console.log(device);
+                      navigate("/dashboard/history");
                     }}
                   />
                 </Tooltip>
