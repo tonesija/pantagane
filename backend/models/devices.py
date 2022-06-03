@@ -21,6 +21,9 @@ class DeviceIn(DeviceBase):
 
 class DeviceOut(DeviceBase):
     id: int
+
+
+class DeviceOutWithCounter(DeviceOut):
     counter: int
 
     @classmethod

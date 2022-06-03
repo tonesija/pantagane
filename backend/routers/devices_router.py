@@ -10,13 +10,13 @@ from iot_platform.mqtt_client import (
     mqtt_publish_actuate_max_interval,
     mqtt_publish_actuate_set_counter,
 )
-from models.devices import DeviceIn, DeviceOut, DeviceUpdate
+from models.devices import DeviceIn, DeviceOut, DeviceOutWithCounter, DeviceUpdate
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 router = APIRouter(prefix="/devices", tags=["devices"])
 
 
-@router.get("/", response_model=List[DeviceOut])
+@router.get("/", response_model=List[DeviceOutWithCounter])
 def list_devices(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -40,7 +40,9 @@ def list_devices(
 
         devices_return_model = []
         for i in range(len(devices)):
-            device_return_model = DeviceOut.from_orm(devices[i], devices_counter[i])
+            device_return_model = DeviceOutWithCounter.from_orm(
+                devices[i], devices_counter[i]
+            )
             devices_return_model.append(device_return_model)
 
         return devices_return_model
