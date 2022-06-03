@@ -1,4 +1,4 @@
-import { Card, Row, Col, Button, Tooltip } from "antd";
+import { Card, Row, Col, Button, Tooltip, Progress } from "antd";
 import {
   CheckCircleFilled,
   EditOutlined,
@@ -13,15 +13,17 @@ function Devices() {
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
-    getDevices().then((data) => {
-      setDevices(data);
-    });
+    setInterval(() => {
+      getDevices().then((data) => {
+        setDevices(data);
+      });
+    }, 2500);
   }, []);
 
   return (
-    <Row gutter={16}>
+    <Row gutter={8}>
       {devices.map((device) => (
-        <Col span={6}>
+        <Col key={device.device_id} xs={24} md={12} lg={6} xl={4}>
           <Card
             style={{ marginTop: "1em" }}
             title={
@@ -29,7 +31,7 @@ function Devices() {
                 <Col>{device.device_id}</Col>
                 {device.counter > device.max_capacity ? (
                   <Col>
-                    <WarningFilled style={{ color: "yellow" }}></WarningFilled>
+                    <WarningFilled style={{ color: "red" }}></WarningFilled>
                   </Col>
                 ) : (
                   <Col>
@@ -48,9 +50,18 @@ function Devices() {
               />
             }
           >
+            <Progress
+              status={
+                device.counter > device.max_capacity ? "exception" : "normal"
+              }
+              percent={((100 * device.counter) / device.max_capacity).toFixed(
+                2
+              )}
+            />
             <p>{device.desc}</p>
-            <p>Max capacity: {device.max_capacity}</p>
             <p>Max interval: {device.max_interval}</p>
+
+            <p>Max capacity: {device.max_capacity}</p>
             <p>People inside: {device.counter}</p>
             <Row justify="end">
               <Col>
