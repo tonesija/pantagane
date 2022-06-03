@@ -1,6 +1,8 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import and_
+from sqlalchemy.orm import Session
+from db.reading import Reading
 from database import get_db
 from db.device import Device
 from db.user import User
@@ -10,13 +12,13 @@ from iot_platform.mqtt_client import (
     mqtt_publish_actuate_max_interval,
     mqtt_publish_actuate_set_counter,
 )
-from models.devices import DeviceIn, DeviceOut, DeviceOutWithCounter, DeviceUpdate
+from models.devices import DeviceIn, DeviceOut, DeviceUpdate
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 router = APIRouter(prefix="/devices", tags=["devices"])
 
 
-@router.get("/", response_model=List[DeviceOutWithCounter])
+@router.get("/", response_model=List[DeviceOut])
 def list_devices(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -30,12 +32,7 @@ def list_devices(
         (List[DeviceOutWithCounter])
     """
 
-    devices = (
-        db.query(Device)
-        .filter(Device.user_id == current_user.id)
-        .options(joinedload(Device.readings))
-        .all()
-    )
+    devices = db.query(Device).filter(Device.user_id == current_user.id).all()
 
     return devices
 
@@ -130,3 +127,36 @@ def update_device(
         )
 
     return device_model
+
+
+@router.delete("/{device_id}", response_model=DeviceOut)
+def delete_device(
+    device_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Deletes a device.
+
+    Args:
+        device_id (str): aka thing name.
+
+    Raises:
+        HTTPException: 404 if the device does not exist.)
+    """
+
+    try:
+        device_query = db.query(Device).filter(Device.device_id == device_id)
+        if device_query.one().user.username != current_user.username:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"Unauthorized to change device with device_id: {device_id}.",
+            )
+
+        device_query.delete()
+
+        db.commit()
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Device with device_id: {device_id} not found.",
+        )

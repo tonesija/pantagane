@@ -13,6 +13,7 @@ class Device(Base):
     max_capacity = Column(Integer)
     max_interval = Column(Integer)
     desc = Column(String)
+    counter = Column(Integer, default=0)
 
     user_id = Column(Integer, ForeignKey("users.id"))
     user = relationship("User", back_populates="devices")
