@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Menu, Typography, Select } from "antd";
 
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useOutletContext, useNavigate } from "react-router-dom";
 
 import "./dashboard.scss";
 
@@ -12,9 +12,19 @@ function Dashboard() {
   const [dropdownItems, setDropdownItems] = useState([]);
   const [currentDevice, setCurrentDevice] = useState(null);
 
+  const [isLoggedIn] = useOutletContext();
+  const navigate = useNavigate();
+
   const handleDeviceChange = (e) => {
     setCurrentDevice(e.target.innerText);
   };
+
+  useEffect(() => {
+    console.log(isLoggedIn);
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
 
   useEffect(() => {
     async function fetchData() {

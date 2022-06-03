@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Button, Input, Typography } from "antd";
 
 import { login } from "../../services/authService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
+  const [isLoggedIn] = useOutletContext();
+
+  useEffect(() => {
+    console.log(isLoggedIn);
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    }
+  }, [isLoggedIn, navigate]);
 
   const onFinish = async (formData) => {
     const response = await login(formData);
