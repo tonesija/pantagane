@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from database import get_db
 from db.device import Device
 from db.user import User
@@ -27,30 +27,17 @@ def list_devices(
         username (str): username of the user.
 
     Returns:
-        (List[DeviceOut])
+        (List[DeviceOutWithCounter])
     """
 
-    try:
-        # TODO: optimize for the love of god
-        user = db.query(User).filter(User.username == current_user.username).one()
-        devices = db.query(Device).filter(Device.user_id == user.id).all()
-        devices_counter = [
-            device.readings[-1].ammount if len(device.readings) > 0 else 0
-            for device in devices
-        ]
+    devices = (
+        db.query(Device)
+        .filter(Device.user_id == current_user.id)
+        .options(joinedload(Device.readings))
+        .all()
+    )
 
-        devices_return_model = []
-        for i in range(len(devices)):
-            device_return_model = DeviceOutWithCounter.from_orm(
-                devices[i], devices_counter[i]
-            )
-            devices_return_model.append(device_return_model)
-
-        return devices_return_model
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist."
-        )
+    return devices
 
 
 @router.post("/", response_model=DeviceOut)
