@@ -132,7 +132,7 @@ def update_device(
     return device_model
 
 
-@router.put("/{device_id}", response_model=DeviceOut)
+@router.delete("/{device_id}", response_model=DeviceOut)
 def delete_device(
     device_id: str,
     db: Session = Depends(get_db),
