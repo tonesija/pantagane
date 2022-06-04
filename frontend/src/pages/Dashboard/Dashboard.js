@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import { Menu, Typography, Select } from "antd";
 
-import { Outlet, Link, useOutletContext, useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  Link,
+  useOutletContext,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 import "./dashboard.scss";
 
@@ -12,11 +18,18 @@ function Dashboard() {
   const [dropdownItems, setDropdownItems] = useState([]);
   const [currentDevice, setCurrentDevice] = useState(null);
 
+  let location = useLocation();
+
   const { isLoggedIn } = useOutletContext();
   const navigate = useNavigate();
 
   const handleDeviceChange = (e) => {
     setCurrentDevice(e.target.innerText);
+  };
+
+  const getSelectedKey = () => {
+    const key = location.pathname.split("/")[2] || "devices";
+    return key;
   };
 
   useEffect(() => {
@@ -65,6 +78,7 @@ function Dashboard() {
 
       <Menu
         mode="horizontal"
+        selectedKeys={[`dashboard-${getSelectedKey()}`]}
         items={[
           {
             label: <Link to="/dashboard/devices">Devices</Link>,

@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 function Header({ items }) {
   let location = useLocation();
 
-  const getKeys = () => {
+  const getSelectedKey = () => {
     const key = location.pathname.split("/")[1] || "home";
     return key;
   };
@@ -20,7 +20,7 @@ function Header({ items }) {
         title="Pantagane"
         theme="dark"
         items={items}
-        selectedKeys={[`header-${getKeys()}`]}
+        selectedKeys={[`header-${getSelectedKey()}`]}
       />
     </header>
   );
