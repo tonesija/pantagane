@@ -1,3 +1,16 @@
 .dashboard-outlet {
   padding: 16px;
 }
+
+.history-content{
+  display: inline-flex;
+  width: 100%;
+}
+.history-search{
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+.history-graph{
+  width: 70%;
+}

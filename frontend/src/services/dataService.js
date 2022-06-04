@@ -59,3 +59,30 @@ export async function addDevice(deviceData) {
     }
   }
 }
+
+export async function getReadings(device) {
+  try {
+    const response = await axios.get(`/readings/${device}`, {
+      withCredentials: true,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    if (!err?.response) {
+      return {
+        ...err,
+        message: "No response.",
+      };
+    } else if (err.response?.status === 401) {
+      return {
+        ...err,
+        message: "Unauthorized.",
+      };
+    } else {
+      return {
+        ...err,
+        message: "Unexpected error.",
+      };
+    }
+  }
+}
