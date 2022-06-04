@@ -78,6 +78,10 @@ function Dashboard() {
             label: <Link to="/dashboard/settings">Settings</Link>,
             key: "dashboard-settings",
           },
+          {
+            label: <Link to="/dashboard/add-device">Add Device</Link>,
+            key: "dashboard-add-device",
+          },
         ]}
       />
       <div className="dashboard-outlet">

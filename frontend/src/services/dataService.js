@@ -28,3 +28,34 @@ export async function getDevices() {
     }
   }
 }
+
+export async function addDevice(deviceData) {
+  try {
+    const response = await axios.post(DEVICE_URL, deviceData, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (err) {
+    if (!err?.response) {
+      return {
+        ...err,
+        message: "No response.",
+      };
+    } else if (err.response?.status === 401) {
+      return {
+        ...err,
+        message: "Unauthorized.",
+      };
+    } else if (err.response?.status === 409) {
+      return {
+        ...err,
+        message: "Device with that name already exists.",
+      };
+    } else {
+      return {
+        ...err,
+        message: "Unexpected error.",
+      };
+    }
+  }
+}
