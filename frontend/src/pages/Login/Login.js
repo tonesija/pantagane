@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Input, Typography } from "antd";
 
 import { login } from "../../services/authService";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
 function Login() {
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const navigate = useNavigate();
   const [isLoggedIn] = useOutletContext();
 
   useEffect(() => {
-    console.log(isLoggedIn);
     if (isLoggedIn) {
       navigate("/dashboard");
     }
@@ -21,6 +22,8 @@ function Login() {
     // provjeri response i ovisno o njemu navigiraj
     if (response?.status === 200) {
       navigate("/dashboard");
+    } else {
+      setErrorMessage(response?.message);
     }
   };
 
@@ -38,7 +41,7 @@ function Login() {
         <Form.Item
           label="Username"
           name="username"
-          rules={[{ required: true, message: "Please input your username!" }]}
+          rules={[{ required: true, message: "Please enter your username!" }]}
         >
           <Input />
         </Form.Item>
@@ -46,7 +49,7 @@ function Login() {
         <Form.Item
           label="Password"
           name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
+          rules={[{ required: true, message: "Please enter your password!" }]}
         >
           <Input.Password />
         </Form.Item>
@@ -57,6 +60,8 @@ function Login() {
           </Button>
         </Form.Item>
       </Form>
+
+      <Typography.Text style={{ color: "red" }}>{errorMessage}</Typography.Text>
     </div>
   );
 }

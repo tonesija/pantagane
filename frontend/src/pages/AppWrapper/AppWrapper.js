@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { Header, Footer } from "../../components";
 
 import { checkToken, logout } from "../../services/authService";
@@ -10,6 +10,7 @@ import {
   LoginOutlined,
   LogoutOutlined,
   UserAddOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 
 import "./appWrapper.scss";
@@ -17,6 +18,7 @@ import "./appWrapper.scss";
 function AppWrapper() {
   const [isLoggedIn, setIsLoggedin] = useState(false);
   const navigate = useNavigate();
+  let location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,9 +35,11 @@ function AppWrapper() {
     if (localStorage.getItem("user")) {
       setIsLoggedin(fetchData());
     } else {
-      setIsLoggedin(false);
+      if (isLoggedIn) {
+        setIsLoggedin(false);
+      }
     }
-  }, [navigate]);
+  }, [location]);
 
   const onLogout = () => {
     console.log("Logout clicked...");
@@ -45,6 +49,10 @@ function AppWrapper() {
     navigate("/");
   };
 
+  const getUser = () => {
+    return localStorage.getItem("user");
+  };
+
   const loggedInItems = [
     {
       label: <Link to="/dashboard">Dashboard</Link>,
@@ -52,9 +60,17 @@ function AppWrapper() {
       key: "header-dashboard",
     },
     {
-      label: <span onClick={onLogout}>Logout</span>,
+      label: <span>Logout</span>,
       icon: <LogoutOutlined />,
       key: "header-logout",
+      onClick: (e) => onLogout(),
+    },
+    {
+      label: <span>{getUser()}</span>,
+      icon: <UserOutlined />,
+      key: "header-user",
+      className: "header-no-hover",
+      style: { marginLeft: "auto" },
     },
   ];
 

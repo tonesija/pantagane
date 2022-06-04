@@ -6,3 +6,9 @@
 .header {
   flex-shrink: 0;
 }
+
+.header-no-hover:hover {
+  background-color: inherit !important;
+  color: inherit !important;
+  cursor: auto !important;
+}

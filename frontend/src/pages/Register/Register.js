@@ -39,11 +39,11 @@ function Register() {
           label="Username"
           name="username"
           rules={[
-            { required: true, message: "Please input your username!" },
+            { required: true, message: "Please enter your username!" },
             {
-              pattern: /^[A-Za-z][A-Za-z0-9]{5,23}$/,
+              pattern: /^[A-Za-z0-9]{1,24}$/,
               message:
-                "Username must consist of uppercase or lowercase letters, or numbers, must start with a letter and must be between 6 and 24 characters.",
+                "Username must consist of uppercase or lowercase letters, or numbers, and must be between 1 and 24 characters.",
             },
           ]}
         >
@@ -54,7 +54,7 @@ function Register() {
           label="Password"
           name="password"
           rules={[
-            { required: true, message: "Please input your password!" },
+            { required: true, message: "Please enter your password!" },
             {
               pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,24}$/,
               message:
