@@ -11,12 +11,15 @@ import {
   LogoutOutlined,
   UserAddOutlined,
   UserOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 
 import "./appWrapper.scss";
 
 function AppWrapper() {
   const [isLoggedIn, setIsLoggedin] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const navigate = useNavigate();
   let location = useLocation();
 
@@ -33,20 +36,26 @@ function AppWrapper() {
     };
 
     if (localStorage.getItem("user")) {
-      setIsLoggedin(fetchData());
+      fetchData().then((newState) => {
+        setIsLoggedin(newState);
+      });
     } else {
       if (isLoggedIn) {
         setIsLoggedin(false);
       }
     }
+    // eslint-disable-next-line
   }, [location]);
 
   const onLogout = () => {
-    console.log("Logout clicked...");
+    setIsLoggingOut(true);
 
-    logout();
-    setIsLoggedin(false);
-    navigate("/");
+    setTimeout(() => {
+      logout();
+      setIsLoggedin(false);
+      setIsLoggingOut(false);
+      navigate("/");
+    }, 800);
   };
 
   const getUser = () => {
@@ -61,7 +70,7 @@ function AppWrapper() {
     },
     {
       label: <span>Logout</span>,
-      icon: <LogoutOutlined />,
+      icon: isLoggingOut ? <LoadingOutlined /> : <LogoutOutlined />,
       key: "header-logout",
       onClick: (e) => onLogout(),
     },
@@ -115,7 +124,7 @@ function AppWrapper() {
         ]}
       />
       <main className="main">
-        <Outlet context={[isLoggedIn]} />
+        <Outlet context={{ isLoggedIn, setIsLoggedin }} />
       </main>
       <Footer />
     </div>

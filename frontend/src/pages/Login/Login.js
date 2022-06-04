@@ -8,7 +8,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
-  const [isLoggedIn] = useOutletContext();
+  const { isLoggedIn, setIsLoggedin } = useOutletContext();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -21,6 +21,7 @@ function Login() {
 
     // provjeri response i ovisno o njemu navigiraj
     if (response?.status === 200) {
+      setIsLoggedin(true);
       navigate("/dashboard");
     } else {
       setErrorMessage(response?.message);

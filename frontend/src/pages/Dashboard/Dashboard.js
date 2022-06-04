@@ -12,7 +12,7 @@ function Dashboard() {
   const [dropdownItems, setDropdownItems] = useState([]);
   const [currentDevice, setCurrentDevice] = useState(null);
 
-  const [isLoggedIn] = useOutletContext();
+  const { isLoggedIn } = useOutletContext();
   const navigate = useNavigate();
 
   const handleDeviceChange = (e) => {
@@ -20,11 +20,11 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    console.log(isLoggedIn);
     if (!isLoggedIn) {
       navigate("/login");
     }
-  }, [isLoggedIn, navigate]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
