@@ -11,21 +11,11 @@ function History() {
   const [devices, setDevice] = useState(null);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
-
-  let readings = [];
-  let graph = <></>;
+  
   useEffect(() => {
-    getDevices().then((data) => {
-      setAllDevices(data);
-      for (let device of data) {
-        getReadings(device.device_id).then((data) => {
-          data.forEach(r => readings.push(r));
-        });
-      }
-      setAllReadings(readings);
-    });
-
-    setInterval(() => {
+    let readings = [];
+    
+    const init = function setData() {
       getDevices().then((data) => {
         setAllDevices(data);
         for (let device of data) {
@@ -35,12 +25,15 @@ function History() {
         }
         setAllReadings(readings);
       });
-    }, REFRESH_TIMER);
-
+    }
+    
+    init();
+    setInterval(init, REFRESH_TIMER);
   }, []);
-
+  
+  let graph = <></>;
   if (devices && devices.length > 0) { //device selected
-    readings = filterReadings(allReadings, devices, start, end);
+    let readings = filterReadings(allReadings, devices, start, end);
     graph = <LineChart readings={readings} devices={devices} />;
   }
 
