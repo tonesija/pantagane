@@ -16,7 +16,7 @@ from auth.auth_middleware import (
 
 from models.users import UserIn, UserOut
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -73,7 +73,6 @@ def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    # return {"access_token": access_token, "token_type": "bearer"}
     token = jsonable_encoder(access_token)
     content = {
         "message": "You've successfully logged in. Welcome back!",
