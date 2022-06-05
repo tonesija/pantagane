@@ -19,16 +19,21 @@ function History() {
   useEffect(() => {
     let readings = [];
 
-    const init = () => {
-      getDevices().then((data) => {
-        setAllDevices(data);
-        for (let device of data) {
-          getReadings(device.device_id).then((data) => {
-            data.forEach((r) => readings.push(r));
-          });
+    const init = async () => {
+      readings = [];
+
+      const data = await getDevices();
+      setAllDevices(data);
+      for (let device of data) {
+        const reading = await getReadings(device.device_id);
+
+        for (let r of reading) {
+          readings.push(r);
         }
+      }
+      if (readings.length > 0) {
         setAllReadings(readings);
-      });
+      }
     };
 
     init();

@@ -11,6 +11,9 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
+import "chartjs-adapter-date-fns";
+import { format } from "date-fns";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,33 +25,31 @@ ChartJS.register(
 );
 
 function LineChart(props) {
-  let dates = getDates(props.readings);
-  let readings = getReadingsPerDevice(props.readings, props.devices, dates);
+  let readings = getReadingsPerDevice(props.readings, props.devices);
 
   const state = {
-    labels: getTimeLabels(dates),
     datasets: getDataSets(readings),
   };
+
+  const options = {
+    scales: {
+      x: {
+        type: "time",
+      },
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   return (
     <div>
-      <Line type="line" data={state} />
+      <Line type="line" data={state} options={options} />
     </div>
   );
 }
 
-function getDates(readings) {
-  if (readings.length === 0) return [];
-
-  let dates = [...new Set(readings.map((d) => d.created_at))];
-  dates = dates.map((d) => new Date(Date.parse(d)));
-  dates.sort(function (a, b) {
-    return a.getTime() - b.getTime();
-  });
-
-  return dates;
-}
-
-function getReadingsPerDevice(readings, devices, dates) {
+function getReadingsPerDevice(readings, devices) {
   if (readings.length === 0) return {};
 
   let data = {};
@@ -56,45 +57,26 @@ function getReadingsPerDevice(readings, devices, dates) {
     let deviceReadings = readings.filter(
       (reading) => reading.device_id === device
     );
-    let amounts = [];
-    for (let date of dates) {
-      let reading = deviceReadings.find(
-        (reading) => new Date(reading.created_at).getTime() === date.getTime()
-      );
-      reading ? amounts.push(reading.ammount) : amounts.push(null);
+
+    let deviceData = [];
+
+    for (let reading of deviceReadings) {
+      const timestamp = new Date(reading.created_at);
+
+      deviceData.push({
+        x: format(timestamp, "yyyy-MM-dd hh:mm:ss"),
+        y: reading.ammount,
+      });
     }
-    data[device] = amounts;
+
+    deviceData.sort((a, b) => {
+      return new Date(a.x.valueOf()) - new Date(b.x.valueOf());
+    });
+
+    data[device] = deviceData;
   }
 
   return data;
-}
-
-function getTimeLabels(dates) {
-  if (dates.length === 0) return [];
-
-  let time = dates.map((d) => d.toLocaleString("hr-HR"));
-  time = formatTime(time);
-  return time;
-}
-
-function formatTime(times) {
-  let lastDate = getDateFromDatetime(times[0]);
-  for (let i = 1; i < times.length; i++) {
-    let currentDate = getDateFromDatetime(times[i]);
-    if (currentDate === lastDate) times[i] = getTimeFromDatetime(times[i]);
-    lastDate = currentDate;
-  }
-  return times;
-}
-
-function getDateFromDatetime(datettime) {
-  let index = datettime.lastIndexOf(" ");
-  return datettime.substring(0, --index);
-}
-
-function getTimeFromDatetime(datettime) {
-  let index = datettime.lastIndexOf(" ");
-  return datettime.substring(++index, datettime.length);
 }
 
 function getDataSets(data) {
@@ -104,10 +86,10 @@ function getDataSets(data) {
   for (const [key, value] of Object.entries(data)) {
     let color = getColor(key);
     dataSets.push({
-      label: `Device ${key}`,
+      label: `${key}`,
       fill: false,
       spanGaps: true,
-      lineTension: 0.5,
+      lineTension: 0.2,
       backgroundColor: color,
       borderColor: color,
       data: value,
@@ -116,6 +98,7 @@ function getDataSets(data) {
 
   return dataSets;
 }
+
 let colors = [
   "rgb(255, 165, 0)",
   "rgb(238, 130, 238)",
