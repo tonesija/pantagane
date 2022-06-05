@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 
 from database import Base, engine
-from iot_platform.mqtt_client import mqtt_subscribe_sensor
+from iot_platform.mqtt_client import (
+    mqtt_subscribe_device_connect,
+    mqtt_subscribe_sensor,
+)
 from routers import readings_router, devices_router, users_router
 from fastapi.middleware.cors import CORSMiddleware
 
-from iot_platform.iot_platform_handlers import base_handler
+from iot_platform.iot_platform_handlers import base_handler, base_handler_connect
 
 from fastapi.staticfiles import StaticFiles
 
@@ -33,6 +36,7 @@ app.include_router(users_router.router)
 @app.on_event("startup")
 def init():
     mqtt_subscribe_sensor(base_handler)
+    mqtt_subscribe_device_connect(base_handler_connect)
 
 
 # Serve SPA
