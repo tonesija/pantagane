@@ -105,8 +105,7 @@ def update_device(
             )
 
         update_dict = device.dict(exclude_none=True, exclude_unset=True)
-        if device.counter is not None:
-            update_dict.pop("counter")
+
         device_query.update(update_dict)
         device_model = device_query.one()
 
