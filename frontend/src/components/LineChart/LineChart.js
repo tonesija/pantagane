@@ -84,7 +84,7 @@ function getDataSets(data) {
 
   let dataSets = [];
   for (const [key, value] of Object.entries(data)) {
-    let color = random_rgba(key);
+    let color = getColor(key);
     dataSets.push({
       label: `Device ${key}`,
       fill: false,
@@ -98,12 +98,28 @@ function getDataSets(data) {
 
   return dataSets;
 }
-let colors = new Map();//TODO 
-function random_rgba(device) {
-  var o = Math.round, r = Math.random, s = 255;
-  if(!colors.has(device))
-    colors.set(device,  `rgba(${o(r() * s)}, ${o(r() * s)}, ${o(r() * s)}, ${r().toFixed(1)})`);  
-  return colors.get(device);
+let colors = [
+  "rgb(255, 165, 0)",
+  "rgb(238, 130, 238)",
+  "rgb(60, 179, 113)",
+  "rgb(106, 90, 205)",
+  "rgb(0, 0, 255)",
+  "rgb(255, 0, 0)"
+]
+
+let deviceColors = new Map();
+
+function getColor(device) {
+  if(!deviceColors.has(device)){
+    let color = colors.length > 0 ? colors.pop() : randomRGBA();
+    deviceColors.set(device, color)
+  }
+  return deviceColors.get(device);
+}
+
+function randomRGBA(){
+  let o = Math.round, r = Math.random, s = 255;
+  return`rgba(${o(r() * s)}, ${o(r() * s)}, ${o(r() * s)}, ${r().toFixed(1)})`;  
 }
 
 export default LineChart;

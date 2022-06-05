@@ -65,7 +65,6 @@ export async function getReadings(device) {
     const response = await axios.get(`/readings/${device}`, {
       withCredentials: true,
     });
-    console.log(response.data);
     return response.data;
   } catch (err) {
     if (!err?.response) {
