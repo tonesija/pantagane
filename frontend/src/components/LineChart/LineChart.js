@@ -1,6 +1,25 @@
 import React from "react";
-import { Chart as ChartJS } from 'chart.js/auto'
-import { Line, Chart } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function LineChart(props) {
   let dates = getDates(props.readings);
@@ -8,21 +27,20 @@ function LineChart(props) {
 
   const state = {
     labels: getTimeLabels(dates),
-    datasets: getDataSets(readings)
+    datasets: getDataSets(readings),
   };
   return (
     <div>
-      <Line type='line' data={state} />
+      <Line type="line" data={state} />
     </div>
   );
 }
 
 function getDates(readings) {
-  if (readings.length === 0)
-    return [];
+  if (readings.length === 0) return [];
 
-  let dates = [...new Set(readings.map(d => d.created_at))];
-  dates = dates.map(d => new Date(Date.parse(d)));
+  let dates = [...new Set(readings.map((d) => d.created_at))];
+  dates = dates.map((d) => new Date(Date.parse(d)));
   dates.sort(function (a, b) {
     return a.getTime() - b.getTime();
   });
@@ -31,15 +49,18 @@ function getDates(readings) {
 }
 
 function getReadingsPerDevice(readings, devices, dates) {
-  if (readings.length === 0)
-    return {};
+  if (readings.length === 0) return {};
 
   let data = {};
   for (let device of devices) {
-    let deviceReadings = readings.filter(reading => reading.device_id === device);
-    let amounts = []
+    let deviceReadings = readings.filter(
+      (reading) => reading.device_id === device
+    );
+    let amounts = [];
     for (let date of dates) {
-      let reading = deviceReadings.find(reading => new Date(reading.created_at).getTime() === date.getTime());
+      let reading = deviceReadings.find(
+        (reading) => new Date(reading.created_at).getTime() === date.getTime()
+      );
       reading ? amounts.push(reading.ammount) : amounts.push(null);
     }
     data[device] = amounts;
@@ -49,20 +70,18 @@ function getReadingsPerDevice(readings, devices, dates) {
 }
 
 function getTimeLabels(dates) {
-  if (dates.length === 0)
-    return [];
+  if (dates.length === 0) return [];
 
-  let time = dates.map(d => d.toLocaleString("hr-HR"));
+  let time = dates.map((d) => d.toLocaleString("hr-HR"));
   time = formatTime(time);
   return time;
 }
 
 function formatTime(times) {
-  let lastDate = getDateFromDatetime(times[0])
+  let lastDate = getDateFromDatetime(times[0]);
   for (let i = 1; i < times.length; i++) {
     let currentDate = getDateFromDatetime(times[i]);
-    if (currentDate === lastDate)
-      times[i] = getTimeFromDatetime(times[i]);
+    if (currentDate === lastDate) times[i] = getTimeFromDatetime(times[i]);
     lastDate = currentDate;
   }
   return times;
@@ -79,8 +98,7 @@ function getTimeFromDatetime(datettime) {
 }
 
 function getDataSets(data) {
-  if (Object.keys(data).length === 0)
-    return [];
+  if (Object.keys(data).length === 0) return [];
 
   let dataSets = [];
   for (const [key, value] of Object.entries(data)) {
@@ -92,7 +110,7 @@ function getDataSets(data) {
       lineTension: 0.5,
       backgroundColor: color,
       borderColor: color,
-      data: value
+      data: value,
     });
   }
 
@@ -104,22 +122,24 @@ let colors = [
   "rgb(60, 179, 113)",
   "rgb(106, 90, 205)",
   "rgb(0, 0, 255)",
-  "rgb(255, 0, 0)"
-]
+  "rgb(255, 0, 0)",
+];
 
 let deviceColors = new Map();
 
 function getColor(device) {
-  if(!deviceColors.has(device)){
+  if (!deviceColors.has(device)) {
     let color = colors.length > 0 ? colors.pop() : randomRGBA();
-    deviceColors.set(device, color)
+    deviceColors.set(device, color);
   }
   return deviceColors.get(device);
 }
 
-function randomRGBA(){
-  let o = Math.round, r = Math.random, s = 255;
-  return`rgba(${o(r() * s)}, ${o(r() * s)}, ${o(r() * s)}, ${r().toFixed(1)})`;  
+function randomRGBA() {
+  let o = Math.round,
+    r = Math.random,
+    s = 255;
+  return `rgba(${o(r() * s)}, ${o(r() * s)}, ${o(r() * s)}, ${r().toFixed(1)})`;
 }
 
 export default LineChart;
