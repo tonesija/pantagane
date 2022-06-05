@@ -9,7 +9,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  registerables,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
@@ -28,8 +27,6 @@ ChartJS.register(
 );
 
 function LineChart(props) {
-  console.log(registerables);
-
   let readings = getReadingsPerDevice(props.readings, props.devices);
 
   const state = {
@@ -69,7 +66,7 @@ function getReadingsPerDevice(readings, devices) {
       const timestamp = new Date(reading.created_at);
 
       deviceData.push({
-        x: format(timestamp, "yyyy-MM-dd hh:mm:ss"),
+        x: format(timestamp, "yyyy-MM-dd HH:mm:ss.SSS"),
         y: reading.ammount,
       });
     }

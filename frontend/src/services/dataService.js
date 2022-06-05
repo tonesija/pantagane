@@ -98,7 +98,7 @@ export async function updateDevice(deviceId, deviceData) {
 
 export async function getReadings(device) {
   try {
-    const response = await axios.get(`/readings/${device}`, {
+    const response = await axios.get(`/readings/${device}?page_size=${300}`, {
       withCredentials: true,
     });
     return response.data;
