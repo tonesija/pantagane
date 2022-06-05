@@ -3,7 +3,7 @@ import { LineChart } from "../../components";
 import { DatePicker, Checkbox, Row, Col } from 'antd';
 import { getDevices, getReadings } from "../../services/dataService";
 
-const REFRESH_TIMER = 3000;
+const REFRESH_TIMER = 5000;
 
 function History() {
   const [allDevices, setAllDevices] = useState([]);
@@ -40,9 +40,6 @@ function History() {
   
   if (devices && devices.length > 0) { //device selected
     let readings = filterReadings(allReadings, devices, start, end);
-    console.log("rr ",readings)
-    console.log("dd ",devices)
-    
     graph = <LineChart readings={readings} devices={devices} />;
   }
   return (
