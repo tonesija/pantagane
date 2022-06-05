@@ -6,7 +6,8 @@ from constants import (
     PLATFORM_ENDPOINT,
     PLATFORM_MQTT_PORT,
     PUB_TOPIC,
-    SUB_TOPIC,
+    SUB_TOPIC_CONNECT,
+    SUB_TOPIC_SENSOR,
     MessageTypesEnum,
 )
 from settings import Settings
@@ -44,6 +45,27 @@ def mqtt_publish_actuate(message: dict, device: str):
         print("Publish exception.")
 
 
+def mqtt_publish_actuate_async(message: dict, device: str):
+    """Published a actuation MQTT message asynchronously.
+
+    Args:
+        message (dict): payload.
+        device (str): name of the device, used in a topic.
+    """
+
+    def customCallback(mid):
+        pass
+
+    topic = PUB_TOPIC.replace("+", device)
+    message_json = json.dumps(message)
+    try:
+        mqtt_client.publishAsync(topic, message_json, 1, customCallback)
+        print(f"Published to topic: {topic}, message: {message_json}.")
+
+    except:
+        print("Publish exception.")
+
+
 def mqtt_subscribe_sensor(customCallback: Callable):
     """Subscribes mqtt client to all sensor topics.
 
@@ -52,12 +74,30 @@ def mqtt_subscribe_sensor(customCallback: Callable):
     """
 
     try:
-        success: bool = mqtt_client.subscribe(SUB_TOPIC, 1, customCallback)
+        success: bool = mqtt_client.subscribe(SUB_TOPIC_SENSOR, 1, customCallback)
 
         if success:
-            print(f"Subscription to a topic: {SUB_TOPIC} was successful.")
+            print(f"Subscription to a topic: {SUB_TOPIC_SENSOR} was successful.")
         else:
-            print(f"Failed to subscribe to a topic: {SUB_TOPIC}.")
+            print(f"Failed to subscribe to a topic: {SUB_TOPIC_SENSOR}.")
+    except:
+        print("Subscribe exception.")
+
+
+def mqtt_subscribe_device_connect(customCallback: Callable):
+    """Subscribes mqtt client to all device connect topics.
+
+    Args:
+        callback (Callable): callback when a mqtt message is recieved.
+    """
+
+    try:
+        success: bool = mqtt_client.subscribe(SUB_TOPIC_CONNECT, 1, customCallback)
+
+        if success:
+            print(f"Subscription to a topic: {SUB_TOPIC_CONNECT} was successful.")
+        else:
+            print(f"Failed to subscribe to a topic: {SUB_TOPIC_CONNECT}.")
     except:
         print("Subscribe exception.")
 
@@ -99,3 +139,42 @@ def mqtt_publish_actuate_set_counter(new_value: int, device: str):
     payload = {"type": MessageTypesEnum.SET_COUNTER, "value": new_value}
 
     mqtt_publish_actuate(payload, device)
+
+
+def mqtt_publish_actuate_max_capacity_async(new_value: int, device: str):
+    """Published a actuation MQTT message of type 'max_people_in_room' asynchronously.
+
+    Args:
+        new_value (int): new max capacity.
+        device (str): name of the device, used in a topic.
+    """
+
+    payload = {"type": MessageTypesEnum.MAX_PEOPLE_IN_ROOM, "value": new_value}
+
+    mqtt_publish_actuate_async(payload, device)
+
+
+def mqtt_publish_actuate_max_interval_async(new_value: int, device: str):
+    """Published a actuation MQTT message of type 'max_interval' asynchronously.
+
+    Args:
+        new_value (int): new max interval.
+        device (str): name of the device, used in a topic.
+    """
+
+    payload = {"type": MessageTypesEnum.MAX_INTERVAL, "value": new_value}
+
+    mqtt_publish_actuate_async(payload, device)
+
+
+def mqtt_publish_actuate_set_counter_async(new_value: int, device: str):
+    """Published a actuation MQTT message of type 'set_counter' asynchronously.
+
+    Args:
+        new_value (int): new counter value.
+        device (str): name of the device, used in a topic.
+    """
+
+    payload = {"type": MessageTypesEnum.SET_COUNTER, "value": new_value}
+
+    mqtt_publish_actuate_async(payload, device)
