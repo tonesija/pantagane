@@ -1,13 +1,35 @@
 import React from "react";
-import { Chart as ChartJS, registerables } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  registerables,
+} from "chart.js";
 import { Line } from "react-chartjs-2";
 
 import "chartjs-adapter-date-fns";
 import { format } from "date-fns";
 
-ChartJS.register(...registerables);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function LineChart(props) {
+  console.log(registerables);
+
   let readings = getReadingsPerDevice(props.readings, props.devices);
 
   const state = {
