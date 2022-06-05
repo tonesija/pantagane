@@ -21,10 +21,7 @@ function App() {
         <Route path="/" element={<AppWrapper />}>
           <Route index element={<Home />} />
           <Route path="dashboard" element={<Dashboard />}>
-            <Route
-              index
-              element={<p>Please choose one of the options above</p>}
-            />
+            <Route index element={<Devices />} />
             <Route path="devices" element={<Devices />} />
             <Route path="add-device" element={<AddDevice />} />
             <Route path="history" element={<History />} />

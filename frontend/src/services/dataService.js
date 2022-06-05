@@ -60,6 +60,42 @@ export async function addDevice(deviceData) {
   }
 }
 
+export async function updateDevice(deviceId, deviceData) {
+  try {
+    const response = await axios.put(DEVICE_URL + deviceId, deviceData, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (err) {
+    if (!err?.response) {
+      return {
+        ...err,
+        message: "No response.",
+      };
+    } else if (err.response?.status === 401) {
+      return {
+        ...err,
+        message: "Unauthorized.",
+      };
+    } else if (err.response?.status === 404) {
+      return {
+        ...err,
+        message: "Device not found.",
+      };
+    } else if (err.response?.status === 422) {
+      return {
+        ...err,
+        message: "Invalid values submitted.",
+      };
+    } else {
+      return {
+        ...err,
+        message: "Unexpected error.",
+      };
+    }
+  }
+}
+
 export async function getReadings(device) {
   try {
     const response = await axios.get(`/readings/${device}`, {

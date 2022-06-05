@@ -19,7 +19,7 @@ function History() {
   useEffect(() => {
     let readings = [];
 
-    const init = function setData() {
+    const init = () => {
       getDevices().then((data) => {
         setAllDevices(data);
         for (let device of data) {
@@ -32,7 +32,9 @@ function History() {
     };
 
     init();
-    setInterval(init, REFRESH_TIMER);
+    const initInterval = setInterval(init, REFRESH_TIMER);
+
+    return () => clearInterval(initInterval);
   }, []);
 
   let graph = <></>;

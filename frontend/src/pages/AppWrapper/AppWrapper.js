@@ -64,7 +64,7 @@ function AppWrapper() {
 
   const loggedInItems = [
     {
-      label: <Link to="/dashboard/devices">Dashboard</Link>,
+      label: <Link to="/dashboard">Dashboard</Link>,
       icon: <DashboardOutlined />,
       key: "header-dashboard",
     },

@@ -23,20 +23,18 @@ function Devices() {
     });
 
     const getDeviceInterval = setInterval(() => {
-      console.log("eloo");
       getDevices().then((data) => {
         setDevices(data);
       });
     }, REFRESH_TIMER);
 
-    // doesnt work ?
     return () => clearInterval(getDeviceInterval);
   }, []);
 
   return (
     <Row gutter={8}>
       {devices.map((device) => (
-        <Col key={device.device_id} xs={24} md={12} lg={6} xl={4}>
+        <Col key={device.device_id} xs={12} lg={6} xl={4}>
           <Card
             style={{ marginTop: "1em" }}
             title={

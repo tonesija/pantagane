@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import { Menu, Typography, Select } from "antd";
+import { Menu, Typography } from "antd";
 
 import {
   Outlet,
@@ -12,20 +12,11 @@ import {
 
 import "./dashboard.scss";
 
-const { Option } = Select;
-
 function Dashboard() {
-  const [dropdownItems, setDropdownItems] = useState([]);
-  const [currentDevice, setCurrentDevice] = useState(null);
-
   let location = useLocation();
 
   const { isLoggedIn } = useOutletContext();
   const navigate = useNavigate();
-
-  const handleDeviceChange = (e) => {
-    setCurrentDevice(e.target.innerText);
-  };
 
   const getSelectedKey = () => {
     const key = location.pathname.split("/")[2] || "devices";
@@ -39,42 +30,9 @@ function Dashboard() {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    async function fetchData() {
-      // TODO
-      // dohvati uredaje iz baze
-
-      let deviceData = [
-        { device_id: "t8_thang", desc: "thingito" },
-        { device_id: "t8_thang2", desc: "thangarang" },
-      ];
-
-      setDropdownItems(
-        deviceData.map((item) => ({
-          label: <div onClick={handleDeviceChange}>{item.device_id}</div>,
-          key: item.device_id,
-        }))
-      );
-    }
-
-    fetchData();
-  }, []);
-
   return (
     <>
       <Typography.Title level={2}>Dashboard</Typography.Title>
-
-      <Select
-        placeholder="Choose a device"
-        style={{ width: 160 }}
-        onChange={(e) => console.log(e)}
-      >
-        {dropdownItems.map((item) => (
-          <Option value={item.key} key={item.key}>
-            {item.label}
-          </Option>
-        ))}
-      </Select>
 
       <Menu
         mode="horizontal"
@@ -99,7 +57,7 @@ function Dashboard() {
         ]}
       />
       <div className="dashboard-outlet">
-        <Outlet context={[currentDevice]} />
+        <Outlet />
       </div>
     </>
   );
